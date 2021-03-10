@@ -6,6 +6,8 @@ function mostrar()
 	let cantidad;
 	let categoria;
 	let fabricante;
+	
+	
 	let promedioAl;
 	let promedioIa;
 	let promedioQu;
@@ -16,44 +18,45 @@ function mostrar()
 	let contIa = 0;
 	let contQu = 0;
 	let catMayor;
-	let unidadesDet;
-	let contDesinf = 0;
-	let contBact = 0;
-	let contDet = 0;
+
+	let acumDetMenos200 = 0;
+	
 	let acumDesinf = 0;
 	let acumBact = 0;
 	let acumDet = 0;
-	let cantidadCat;
-	let UnidadesDet;
-	let fabricanteCaro;
-	let categoriaCaro;
-	let flagFabricante = 0;
-	let flagCategoria = 0;
+	
+
+
+	let mayorFabricante;
+	let mayorCategoria;
+	let mayorPrecio;
+	let flag = 1;
 	
   
   
 	for ( let i = 0; i < 5 ; i++ ){
   
 		producto = prompt("Ingrese produto: iac, alcohol o quat.");
-		while(producto != "ALCOHOL" & producto != "IAC" && producto != "QUAT"){
-			producto = prompt("Error. Ingrese producto: ")
+		while(producto != "ALCOHOL" && producto != "IAC" && producto != "QUAT"){
+			producto = prompt("Error. Ingrese producto: ");
 		}
   
-		precio = parseFloat(prompt("Ingrese precio entre $100 y $300"))
-		while (precio < 100 || precio > 300 || isNaN(precio) ){				
+		precio = parseFloat(prompt("Ingrese precio entre $100 y $300"));
+		while (isNaN(precio) || precio < 100  || precio > 300){				
 			precio = prompt("Error. Ingrese precio entre $100 y $300");
 		}
 		cantidad = parseInt(prompt("Ingrese cantidad"))
-		while(   !(cantidad > 0 && cantidad <= 1000)  ){
-			cantidad = prompt("Error. Ingrese cantidad max 1000")
+		while(   !(cantidad > 0 && cantidad <= 1000)  ){	//while (isNan(cantidad) || cantidad <=0 || cantidad > 1000)
+			cantidad = prompt("Error. Ingrese cantidad max 1000");
 		}
 		categoria = prompt("Ingrese tipo: desinfectante, bactericida o detergente.");
 		while(categoria != ("desinfectante") & categoria != ("bactericida") && categoria != ("detergente")){
-			categoria = prompt("Error. Ingrese categoria: ")
+			categoria = prompt("Error. Ingrese categoria: ");
 		}
+	
 		fabricante = prompt("ingrese fabricante");
 		
-		
+									// A  tendria q hacer if else if if
 		switch(producto){
 			case "ALCOHOL":
 			acumAl += cantidad
@@ -61,24 +64,56 @@ function mostrar()
 			break;
 			case "IAC":
 			acumIa += cantidad
-			contIa++
+			contIa++;
 			break;
 			case "QUAT":
 			acumQu += cantidad;
-			contQu++
+			contQu++;
 
 			break;
-
 		}
-	
-	  
-	}
 
+	
+	
+	  // PUNTO B conviene usar if else if
+	
+	  switch(categoria){
+		case "detergente":
+		if (precio <= 200){					//punto C
+		 acumDetMenos200 = cantidad;
+		}
+		acumDet += cantidad;
+		
+		break;
+		case "desinfectante":
+		acumDesinf += cantidad;
+	
+		break;
+		case "bactericida":
+		acumQu += cantidad;
+		break;
+	  }
+	  
+	  //PUNTO D
+	  if ( flag || precio > mayorPrecio){
+		  mayorPrecio = precio;	
+		  mayorCategoria = categoria;
+		  mayorFabricante = fabricante;
+
+		  flag = 0;
+	  }
+
+
+
+	} //TERMINA EL FOR
+							
+	
+	// A ) PROMEDIOS
 	if(contAl != 0 ){
 		promedioAl = acumAl / contAl; 
 	}
 	if(contIa != 0){
-		promedioIa = acumIa / contIa;;
+		promedioIa = acumIa / contIa;
 	}
 	if(contQu != 0){
 		promedioQu = acumQu / contQu;
@@ -86,52 +121,40 @@ function mostrar()
 
 	
 	
-	switch(categoria){
-		case "DETERGENTE":
-		acumDet += cantidadCat
-		contDet++;
-		break;
-		case "desinfectante":
-		acumDesinf += cantidadCat
-		contDesinf++
-		break;
-		case "bactericida":
-		acumQu += cantidadCat;
-		contBact++
-
-		break;
-
-	}
+// punto B
+	
 	if(acumDet > acumDesinf && acumDet > acumBact ){
-		//acumalcohol sea mayor
-			catMayor = "alcohol"
+		//acumdet sea mayor
+			catMayor = "detergente"
 		
 		
-		}
-		else if( acumIa > acumAl  &&  acumIa >= acumQu ){
+		}					//== !!!!!!!!!
+		else if( acumDesinf >= acumDet &&  acumDesinf >= acumBact ){
 		
-			catMayor = "IAC"
+			catMayor = "desinfectante"
 			
 		}
 		
 		else{
 		
-			catMayor = "QUAT"
+			catMayor = "bactericida"
 		
 	}
 	
 
-	if(precio <= 200 && categoria == "detergente"){
-		unidadesDet = contDet
-	}
-
+	
 	
 
 
-
-	console.log("Promedio de alcohol" + promedioAl + " \nPromedio IAC " + promedioIa + " \nPromedio QUAT " + promedioQu )
-	console.log("a categoria con mas cantidad de unidades en total de la compra "+ catMayor)
-	console.log("unidades de detergente con precios menos a 200" + unidadesDet)
+//A
+	
+console.log("Promedio de alcohol" + promedioAl + " \nPromedio IAC " + promedioIa + " \nPromedio QUAT " + promedioQu )
+//B
+console.log("La categoria con mas cantidad de unidades en total de la compra "+ catMayor)
+//C	
+console.log("unidades de detergente con precios menos a 200" + acumDetMenos200)
+//D
+console.log("El producto mas caro vale" + mayorPrecio + " el fabricante mas caro es " + mayorFabricante +  " y la categoria del producto mas caro es " + mayorCategoria)
 	
 
 }
